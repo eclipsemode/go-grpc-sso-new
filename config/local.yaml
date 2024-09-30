@@ -1,0 +1,8 @@
+env: "local"
+storage_path: "mongodb://0.0.0.0"
+token_ttl: 1h
+grpc:
+  port: 44044
+  timeout: 10h
+mongo:
+  db_name: "sso"
