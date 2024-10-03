@@ -1,29 +1,37 @@
 package mongo
 
 import (
-	"gopkg.in/mgo.v2"
-	"log"
+	"context"
+	"fmt"
+	"github.com/eclipsemode/go-grpc-sso-new/internal/config"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.uber.org/zap"
 )
 
 type Storage struct {
-	session *mgo.Session
-	db      *mgo.Database
+	Db *mongo.Database
 }
 
-func NewStorage(storagePath string, dbName string) (*Storage, error) {
-	s, err := mgo.Dial(storagePath)
-	if err != nil {
-		log.Fatalf("Failed to connect to MongoDB: %s", err.Error())
-	}
+func NewStorage(cfg *config.MongoConfig, zap *zap.SugaredLogger) (*Storage, error) {
+	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
+	opts := options.Client().
+		ApplyURI(fmt.Sprintf("%s/%s", cfg.Uri, cfg.DbName)).
+		SetServerAPIOptions(serverAPI)
 
-	s.SetMode(mgo.Primary, true)
+	client, err := mongo.Connect(context.Background(), opts)
+	if err != nil {
+		panic(err)
+	}
+	defer func() {
+		if err := client.Disconnect(context.Background()); err != nil {
+			panic(err)
+		}
+	}()
+
+	zap.Info("Successfully connected to MongoDB")
 
 	return &Storage{
-		session: s,
-		db:      s.DB(dbName),
+		Db: client.Database(cfg.DbName),
 	}, nil
-}
-
-func (s *Storage) Close() {
-	s.session.Close()
 }
