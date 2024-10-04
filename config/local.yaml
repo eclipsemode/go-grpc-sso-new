@@ -1,0 +1,9 @@
+env: "local"
+token_ttl: 1h
+grpc:
+  port: 44044
+  timeout: 10h
+storage:
+  mongo:
+    uri: "mongodb://root:01071806@127.0.0.1:27017"
+    db_name: "sso"
