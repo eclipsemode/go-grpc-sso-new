@@ -11,6 +11,8 @@ require (
 
 require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
+	github.com/eclipsemode/go-grpc-sso-proto-new v0.0.0-20240930102222-8ba6d49ce911 // indirect
+	github.com/gofrs/uuid v4.4.0+incompatible // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect

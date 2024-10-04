@@ -10,7 +10,7 @@ import (
 )
 
 type Storage struct {
-	Db *mongo.Database
+	db *mongo.Database
 }
 
 func NewStorage(cfg *config.MongoConfig, zap *zap.SugaredLogger) (*Storage, error) {
@@ -32,6 +32,6 @@ func NewStorage(cfg *config.MongoConfig, zap *zap.SugaredLogger) (*Storage, erro
 	zap.Info("Successfully connected to MongoDB")
 
 	return &Storage{
-		Db: client.Database(cfg.DbName),
+		db: client.Database(cfg.DbName),
 	}, nil
 }
