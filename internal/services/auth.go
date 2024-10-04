@@ -20,7 +20,7 @@ type UserRepo interface {
 	IsAdmin(ctx context.Context, userID uuid.UUID) (bool, error)
 }
 
-func New(log *zap.SugaredLogger, tokenTTL time.Duration, userRepo UserRepo) *Auth {
+func NewAuthService(log *zap.SugaredLogger, tokenTTL time.Duration, userRepo UserRepo) *Auth {
 	return &Auth{
 		log:      log,
 		userRepo: userRepo,

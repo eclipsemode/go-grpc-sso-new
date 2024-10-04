@@ -3,6 +3,7 @@ package app
 import (
 	"github.com/eclipsemode/go-grpc-sso-new/internal/app/grpc"
 	"github.com/eclipsemode/go-grpc-sso-new/internal/config"
+	"github.com/eclipsemode/go-grpc-sso-new/internal/services"
 	"github.com/eclipsemode/go-grpc-sso-new/internal/storage/mongo"
 	"go.uber.org/zap"
 )
@@ -17,13 +18,15 @@ func New(log *zap.SugaredLogger, cfg *config.Config) *App {
 		DbName: cfg.Storage.Mongo.DbName,
 	}
 
-	_, err := mongo.NewStorage(mongoConfig, log)
+	storage, err := mongo.NewStorage(mongoConfig, log)
 	if err != nil {
 		log.DPanic("new storage problem shit")
 		panic(err)
 	}
 
-	grpcApp := grpc.New(log, cfg.GRPC.Port)
+	authSvc := services.NewAuthService(log, cfg.TokenTTL, storage)
+
+	grpcApp := grpc.New(log, cfg.GRPC.Port, authSvc)
 
 	return &App{
 		GRPCSrv: grpcApp,

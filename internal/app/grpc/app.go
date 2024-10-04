@@ -2,6 +2,7 @@ package grpc
 
 import (
 	"fmt"
+	handler "github.com/eclipsemode/go-grpc-sso-new/internal/handler/auth"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"net"
@@ -13,8 +14,10 @@ type App struct {
 	port       int
 }
 
-func New(log *zap.SugaredLogger, port int) *App {
+func New(log *zap.SugaredLogger, port int, authSvc handler.AuthService) *App {
 	gRPCServer := grpc.NewServer()
+
+	handler.Register(gRPCServer, authSvc)
 
 	return &App{
 		log:        log,
